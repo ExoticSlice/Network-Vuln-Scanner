@@ -11,6 +11,6 @@ def discover_hosts(cidr): # func discover hosts - resuable code for spefic job. 
             'state': nm[host].state() # state of the host -it will return up if device alive/responds no comma last item in dictionary.
         })                              
 if __name__ == '__main__': # only run code below if file is being run directly/ another file imports the scanner later it wont run auto.
-    results = discover_hosts('192.168.56.0/24') # call func u just built passes network range scans & stores all results in varibale called results.
+    results = discover_hosts('192.168.56.101') # call func u just built passes network range scans & stores all results in varibale called results.
     print(json.dumps(results, indent=2)) # prints scans result clean readable JSON format. 
      
