@@ -26,7 +26,7 @@ def scan_services(host):
 
 if __name__ == '__main__': # only run code below if file is being run directly/ another file imports the scanner later it wont run auto.
     hosts = discover_hosts('192.168.56.101') # call func u just built passes network range scans & stores all results in varibale called results.
-    print("live hosts:", json.dumps(results, indent=2)) # prints scans result clean readable JSON format. 
+    print("live hosts:", json.dumps(hosts, indent=2)) # prints scans result clean readable JSON format. 
     for h in hosts:
         print(f"\nscanning services on {h['ip']}...") 
         services = scan_services(h['ip'])
