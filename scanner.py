@@ -10,6 +10,7 @@ def discover_hosts(cidr): # func discover hosts - resuable code for spefic job. 
             'hostname': nm[host].hostname(), # gets the hostname if it has one. ip add 192.18.56.101 / hostname could be metasploitbale. comeup empty if no hostname.
             'state': nm[host].state() # state of the host -it will return up if device alive/responds no comma last item in dictionary.
         })
+    return live_hosts
 def scan_services(host):
     nm = nmap.PortScanner()
     nm.scan(hosts=host, arguments='-sV -sC -T4')
