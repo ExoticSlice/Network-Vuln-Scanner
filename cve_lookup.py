@@ -25,6 +25,6 @@ def lookup_cves(service, version): # takes two inputs , service and name like ss
             'score': score # stores CVSS score in dictionary. no comma due to last item in the dictionary.
         }) # closes thr dictionaryand the append from line 21
     return cves # sends completed lsit of CVE back to whoever called the fuction - same pattern as return live_hosts and return services in scanner.py
-if__name__ == '__main__':
+if __name__ == '__main__':
     results = lookup_cves('ssh', 'OpenSSH 4.7')
     print(json.dumps(results, indent=2))
