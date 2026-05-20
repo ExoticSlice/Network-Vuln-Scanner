@@ -1,8 +1,8 @@
 def calculate_risk(score):
     if score is None: # checks score is none / remeber score set to none earlier when a cve didnt have cvss score. case handled first so we dont try to compare none to a number.
-        return 'unknown' # if score is none returns unknown
+        return 'Unknown' # if score is none returns unknown
     elif score >= 9.0: # checks score 9.0 above or else if it only runs the previous if was false. score of 9.0 above is consisdered critical severity according to cvss standard.
-        return 'critical'# score abaove 9.0 return critical.
+        return 'Critical'# score abaove 9.0 return critical.
     elif score >= 7.0: # checks score between 7.0 and 8.9
         return 'High' # if score between 7.0 / 8.9 return high.
     elif score >= 4.0:
