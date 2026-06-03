@@ -3,10 +3,23 @@ from reportlab.lib import colors # color code for severity.
 from reportlab.lib.styles import getSampleStyleSheet# import prebuilt text styles from report lab
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle # imports builidng blocks
 from datetime import datetime # imports datetime module / use to atuo add todays date to pdf report/ every time report regens, it timestamp it self.
-
+from risk_engine import calculate_risk
 def generate_report(hosts, filename='report.pdf'): # create main func called generate report and takes 2 inputs hosts: scans results containing all hosts,services and CVEs / filename: what to call the pdf file,defaulting to report.pdf if you dont specify one.
     doc = SimpleDocTemplate(filename, pagesize=A4) # creates the pdf docobj stores in doc. takes filename u passed and sets the page size to A4.
     styles = getSampleStyleSheet() # loads pre built text styles into variable called styles. to apply consistent formatting.     
     elements = [] # creates empty list / everything added to pdf gets added to this list first. report lab builds pdf from list in order.
     elements.append(Paragraph("Network Vulnerability Scan Report", styles['Title'])) # adds main titile to pdf like writing a title on a doc
-    
+    elements.append(Paragraph(f"Generated: {datetime.now().strftime('%D/%m/%Y %H:%M')}", styles['Normal'])) # gets current date and time and format to uk style
+    elements.append(Spacer(1, 20)) # adds blank space of 20 units ater the title and date. makes room baically.
+    elements.append(Paragraph("Executive Summary", styles['Heading1'])) # adds first section heading 
+    total_hosts = len(hosts) # counts total number of hosts that were scanned and stores it.  if 3 scanned 3 hosts 3 returns.
+    elements.append(Paragraph(f"Total Hosts scanned:{total_hosts}", styles['Normal'])) # adds line to pdf showign how many hosts were scanned. the "f" inserts tota; hosts number in to the text.
+    elements.append(Spacer(1,20)) # adds another blank space after exceutive summary section before the next section starts.
+    elements.append(Paragraph("findings", styles['Heading1'])) #  where vulnerability details will be listed by host.
+    for host in hosts: # loops through each host that was scanned and for each host we'll add its ip address, services and CVE's report.
+        elements.append(Paragraph(f"Host: {host['ip']}", styles['Heading2'])) # adds hosts IP address subheading for each host section in report.
+        for service in host.get('services', []): # loops through all services found on the host. get's services list from this host and if not any then use empty list.
+            elements.append(Paragraph(f"Port {service['port']} - {service['service']} {service['version']}", styles['Normal'])) # adds a line each service showing the port number, service name and version -- for example port 22 -ssh openssh4.7. core finding information that maps directly to CVE's
+            for cve in service.get('cves', []): # loops through cves found for that service. if no cve's found it just uses a empty list.
+                risk = calculate_risk(cve['score']) # calls your risk calculate function from risk engine py to get severity label for each cve. 9.5 is critical and 7.2 is high
+                elements.append(Paragraph(f"[{risk}] {cve['cve_id']} - Score: {cve['score']}", styles['Normal'])) 
