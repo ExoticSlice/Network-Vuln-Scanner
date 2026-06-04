@@ -10,7 +10,7 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
     elements = [] # creates empty list / everything added to pdf gets added to this list first. report lab builds pdf from list in order.
     elements.append(Paragraph("Network Vulnerability Scan Report", styles['Title'])) # adds main titile to pdf like writing a title on a doc
     elements.append(Paragraph(f"Generated: {datetime.now().strftime('%D/%m/%Y %H:%M')}", styles['Normal'])) # gets current date and time and format to uk style
-    elements.append(Spacer(1, 20)) # adds blank space of 20 units ater the title and date. makes room baically.
+    elements.append(Spacer(1, 20)) # adds blank space of 20 units ater the title and date. makes room baically.  ELEMENTS APPEND HOW WE ADD THINGS TO PDF.
     elements.append(Paragraph("Executive Summary", styles['Heading1'])) # adds first section heading 
     total_hosts = len(hosts) # counts total number of hosts that were scanned and stores it.  if 3 scanned 3 hosts 3 returns.
     elements.append(Paragraph(f"Total Hosts scanned:{total_hosts}", styles['Normal'])) # adds line to pdf showign how many hosts were scanned. the "f" inserts tota; hosts number in to the text.
@@ -23,3 +23,10 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
             for cve in service.get('cves', []): # loops through cves found for that service. if no cve's found it just uses a empty list.
                 risk = calculate_risk(cve['score']) # calls your risk calculate function from risk engine py to get severity label for each cve. 9.5 is critical and 7.2 is high
                 elements.append(Paragraph(f"[{risk}] {cve['cve_id']} - Score: {cve['score']}", styles['Normal'])) 
+                elements.append(Paragraph(f"Description: {cve['description']}", style['Normal'])) # this add description for each CVE ID.
+                elements.append(Spacer(1, 10)) # so that it is not crammed.   
+    elements.append(Spacer(1, 20)) # adds larger space after findings seperates findings section to section.
+    elements.append(Paragraph("Remediation Summary", styles['Heading1'])) # this section is where you list things that need to be fixed
+    Table_data = [['CVE ID', 'Severity', 'Score', 'Recommendation']] # creates headder for the table and is a list inside a list like a spreadsheet
+    for host in hosts: # loops through all hosts to gather CVE data for the table.
+    for service in host.get('service', []):
