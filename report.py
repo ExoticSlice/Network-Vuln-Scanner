@@ -14,7 +14,7 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
     elements.append(Paragraph("Executive Summary", styles['Heading1'])) # adds first section heading 
     total_hosts = len(hosts) # counts total number of hosts that were scanned and stores it.  if 3 scanned 3 hosts 3 returns.
     elements.append(Paragraph(f"Total Hosts scanned:{total_hosts}", styles['Normal'])) # adds line to pdf showign how many hosts were scanned. the "f" inserts tota; hosts number in to the text.
-    elements.append(Spacer(1,20)) # adds another blank space after exceutive summary section before the next section starts.
+    elements.append(Spacer(1, 20)) # adds another blank space after exceutive summary section before the next section starts.
     elements.append(Paragraph("findings", styles['Heading1'])) #  where vulnerability details will be listed by host.
     for host in hosts: # loops through each host that was scanned and for each host we'll add its ip address, services and CVE's report.
         elements.append(Paragraph(f"Host: {host['ip']}", styles['Heading2'])) # adds hosts IP address subheading for each host section in report.
@@ -30,7 +30,7 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
     table_data = [['CVE ID', 'Severity', 'Score', 'Recommendation']] # creates headder for the table and is a list inside a list like a spreadsheet
     for host in hosts: # loops through all hosts to gather CVE data for the table.
         for service in host.get('service', []):
-            for cve in service.get('cves', []):
+            for cve in services.get('cves', []):
                 risk = calculate_risk(cve['score']) # get severity label for each cve same as before.
                 table_data.append([cve['cve_id'], risk, str(cve['score']), 'Update or patch affected service']) # adds a row to the remedoation table for each cve with four coloums
     table = Table(table_data)     # creates actual table object from all the data You've built up Reportlab takes your list and turns to a formatted table ready to add to pdf. 
@@ -39,7 +39,7 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('GRID', (0,0), (-1, -1), 1, colors.black),
     ])) # closes the style rules.
-    elements.append(Table) # adds completed styled table
+    elements.append(table) # adds completed styled table
     doc.build(elements)
 
 if __name__ == '__main__':
