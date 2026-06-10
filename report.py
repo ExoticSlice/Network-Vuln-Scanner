@@ -37,3 +37,24 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
     Table.setStyle(TableStyle([  # start applying styles to our table.
         ('BACKGROUND', (0,0), (-1,0), color.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('GRID', (0,0), (-1, -1), 1, colors.black),
+    ])) # closes the style rules.
+    elements.append(Table) # adds completed styled table
+    doc.build(elements)
+
+if __name__ == '__main__':
+    test_data = [{
+        'ip': '192.168.56.101',
+        'services': [{
+            'port': 22,
+            'service': 'ssh',
+            'version': 'OpenSSH 4.7',
+            'cves': [{
+                'cve_id': 'CVE-2007-4752',
+                'description': 'Test vulnerability',
+                'score': 7.5
+            }]
+        }]
+    }]
+    generate_report(test_data, 'test_report.pdf')
+    print("Report generated successfully!")
