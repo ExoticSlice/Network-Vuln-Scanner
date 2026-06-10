@@ -27,12 +27,12 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
                 elements.append(Spacer(1, 10)) # so that it is not crammed.   
     elements.append(Spacer(1, 20)) # adds larger space after findings seperates findings section to section.
     elements.append(Paragraph("Remediation Summary", styles['Heading1'])) # this section is where you list things that need to be fixed
-    Table_data = [['CVE ID', 'Severity', 'Score', 'Recommendation']] # creates headder for the table and is a list inside a list like a spreadsheet
+    table_data = [['CVE ID', 'Severity', 'Score', 'Recommendation']] # creates headder for the table and is a list inside a list like a spreadsheet
     for host in hosts: # loops through all hosts to gather CVE data for the table.
         for service in host.get('service', []):
             for cve in service.get('cves', []):
                 risk = calculate_risk(cve['score']) # get severity label for each cve same as before.
-                Table_data.append([cve['cve_id'], risk, str(cve['score']), 'Update or patch affected service']) # adds a row to the remedoation table for each cve with four coloums
+                table_data.append([cve['cve_id'], risk, str(cve['score']), 'Update or patch affected service']) # adds a row to the remedoation table for each cve with four coloums
     table = Table(table_data)     # creates actual table object from all the data You've built up Reportlab takes your list and turns to a formatted table ready to add to pdf. 
     Table.setStyle(TableStyle([  # start applying styles to our table.
         ('BACKGROUND', (0,0), (-1,0), color.grey),
