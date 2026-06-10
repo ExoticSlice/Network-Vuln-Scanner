@@ -35,7 +35,7 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
                 table_data.append([cve['cve_id'], risk, str(cve['score']), 'Update or patch affected service']) # adds a row to the remedoation table for each cve with four coloums
     table = Table(table_data)     # creates actual table object from all the data You've built up Reportlab takes your list and turns to a formatted table ready to add to pdf. 
     Table.setStyle(TableStyle([  # start applying styles to our table.
-        ('BACKGROUND', (0,0), (-1,0), color.grey),
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('GRID', (0,0), (-1, -1), 1, colors.black),
     ])) # closes the style rules.
