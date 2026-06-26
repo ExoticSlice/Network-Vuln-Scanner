@@ -14,7 +14,14 @@ def index(): #This is the function that runs when someone visits the homepage. I
             service['cves'] = lookup_cves(service['service'], service['version']) 
             for cve in service['cves']: # loops through service found and to calculate the risk level for each one.
                 cve['risk'] = calculation_risk(cve['Score']) # calculates teh severity label for ech CVE 
-    return render_template('dashboard.html' , hosts=hosts) # sends scan data to an html template an renders it in the browser.
+    counts = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'unknown': 0}
+    for host in hosts:
+        for service in host.get('services', []):
+            for cve in service.get('cves', []):
+                risk = cve['risk'].lower()
+                if risk in counts:
+                    counts[risk] += 1
+    return render_template('dashboard.html', hosts=hosts, counts=counts)   
 
 if __name__ == '__main__':
     app.run(debug=True)   # flask auto reloads when chnages are made       
