@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify # flask - the web application itself / loads html files and converts python data to json.
 from scanner import discover_hosts, scan_services # This imports the two functions you built in scanner.py — discover_hosts to find live hosts and scan_services to enumerate ports and services. The Flask app will use these to run scans when you visit the dashboard.
 from cve_lookup import lookup_cves # This imports the lookup_cves function from cve_lookup.py so the Flask app can query the NVD API for CVEs matching the services found.
-from risk_engine import calculation_risk # This imports the calculate_risk function so the dashboard can display severity labels for each CVE.
+from risk_engine import calculate_risk # This imports the calculate_risk function so the dashboard can display severity labels for each CVE.
 
 app = Flask(__name__) #This creates the Flask web application object and stores it in app. __name__ tells Flask where to look for templates and static files. Think of it like turning the web server on.
 
