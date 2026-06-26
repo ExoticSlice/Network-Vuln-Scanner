@@ -11,7 +11,7 @@ def index(): #This is the function that runs when someone visits the homepage. I
     for host in hosts: # loops through each live hosts to scan its service and look up fir cves
         host['services'] = scan_services(host['ip']) # runs the service enumeration scan for each host and stores results directly 
         for service in host['services']: # loops through each service found on the host so we can look up cves for each one.
-            service['cves'] = lookup_cves(service['service'], service['version']) 
+            service['cves'] = lookup_cves(service['services'], service['version']) 
             for cve in service['cves']: # loops through service found and to calculate the risk level for each one.
                 cve['risk'] = calculate_risk(cve['score']) # calculates teh severity label for ech CVE 
     counts = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'unknown': 0}
