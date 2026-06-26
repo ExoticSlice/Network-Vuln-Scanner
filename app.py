@@ -9,11 +9,11 @@ app = Flask(__name__) #This creates the Flask web application object and stores 
 def index(): #This is the function that runs when someone visits the homepage. It has no indentation because it's paired with the route decorator above it.
     hosts = discover_hosts('192.168.56.0/24') # This runs the host discovery scan when someone visits the dashboard. It scans the whole subnet and stores the live hosts in a variable called hosts.
     for host in hosts: # loops through each live hosts to scan its service and look up fir cves
-        host['service'] = scan_services(host['ip']) # runs the service enumeration scan for each host and stores results directly 
+        host['services'] = scan_services(host['ip']) # runs the service enumeration scan for each host and stores results directly 
         for service in host['services']: # loops through each service found on the host so we can look up cves for each one.
             service['cves'] = lookup_cves(service['service'], service['version']) 
             for cve in service['cves']: # loops through service found and to calculate the risk level for each one.
-                cve['risk'] = calculation_risk(cve['Score']) # calculates teh severity label for ech CVE 
+                cve['risk'] = calculate_risk(cve['score']) # calculates teh severity label for ech CVE 
     counts = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'unknown': 0}
     for host in hosts:
         for service in host.get('services', []):
