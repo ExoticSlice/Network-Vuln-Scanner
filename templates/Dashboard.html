@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    # contains metadata about the page
+    <meta charset="UTF-8" />
+    # tells browser to use standard text encoding
+    <title>Network Vulnerability Scanner Dashboard</title>
+    # sets tab tilte in browser
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    # loads chart from a cdn a free online source.
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1a1a2e;
+        color: #eee;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        color: #00d4ff;
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th {
+        background-color: #00d4ff;
+        color: #000;
+        padding: 10px;
+      }
+      td {
+        padding: 10px;
+        border: 1px solid #444;
+      }
+      .critical {
+        background-color: #ff0000;
+        color: white;
+      }
+      .high {
+        background-color: #ff6600;
+        color: white;
+      }
+      .medium {
+        background-color: #ffcc00;
+        color: black;
+      }
+      .low {
+        background-color: #00cc00;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Network Vulnerability Scanner Dashboard</h1>
+    <canvas id="severityChart" width="400" height="200"></canvas>
+    <table>
+      <tr>
+        <th>Host</th>
+        <th>Port</th>
+        <th>Service</th>
+        <th>Version</th>
+        <th>CVE ID</th>
+        <th>Score</th>
+        <th>Risk</th>
+        <th>Description</th>
+      </tr>
+      {% for host in hosts %} {% for service in host.services %} {% for cve in
+      service.cves %}
+      <tr>
+        <td>{{ host.ip }}</td>
+        <td>{{ service.port }}</td>
+        <td>{{ service.service }}</td>
+        <td>{{ service.version }}</td>
+        <td>{{ cve.cve_id }}</td>
+        <td>{{ cve.score }}</td>
+        <td class="{{ cve.risk | lower }}">{{ cve.risk }}</td>
+        <td>{{ cve.description }}</td>
+      </tr>
+      {% endfor %} {% endfor %} {% endfor %}
+    </table>
+    <script>
+      var ctx = document.getElementById('severityChart').getContext('2d');
+      var chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+              labels: ['Critical', 'High', 'Medium', 'Low', 'Unknown'],
+              datasets: [{
+                  data: [
+                      {{ counts.critical }},
+                      {{ counts.high }},
+                      {{ counts.medium }},
+                      {{ counts.low }},
+                      {{ counts.unknown }}
+                  ],
+                  backgroundColor: ['#ff0000', '#ff6600', '#ffcc00', '#00cc00', '#999999']
+              }]
+          }
+      });
+    </script>
+  </body>
+</html>
