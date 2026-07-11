@@ -1,19 +1,23 @@
-from flask import Flask, render_template, jsonify # flask - the web application itself / loads html files and converts python data to json.
-from scanner import discover_hosts, scan_services # This imports the two functions you built in scanner.py — discover_hosts to find live hosts and scan_services to enumerate ports and services. The Flask app will use these to run scans when you visit the dashboard.
-from cve_lookup import lookup_cves # This imports the lookup_cves function from cve_lookup.py so the Flask app can query the NVD API for CVEs matching the services found.
-from risk_engine import calculate_risk # This imports the calculate_risk function so the dashboard can display severity labels for each CVE.
+from flask import Flask, render_template, jsonify
+from scanner import discover_hosts, scan_services
+from cve_lookup import lookup_cves
+from risk_engine import calculate_risk
 
-app = Flask(__name__) #This creates the Flask web application object and stores it in app. __name__ tells Flask where to look for templates and static files. Think of it like turning the web server on.
+import os
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
-@app.route('/') #This is a route decorator — it tells Flask that when someone visits the homepage (/) of your dashboard, run the function below it. Think of 
-def index(): #This is the function that runs when someone visits the homepage. It has no indentation because it's paired with the route decorator above it.
-    hosts = discover_hosts('192.168.56.0/24') # This runs the host discovery scan when someone visits the dashboard. It scans the whole subnet and stores the live hosts in a variable called hosts.
-    for host in hosts: # loops through each live hosts to scan its service and look up fir cves
-        host['services'] = scan_services(host['ip']) # runs the service enumeration scan for each host and stores results directly 
-        for service in host['services']: # loops through each service found on the host so we can look up cves for each one.
-            service['cves'] = lookup_cves(service['services'], service['version']) 
-            for cve in service['cves']: # loops through service found and to calculate the risk level for each one.
-                cve['risk'] = calculate_risk(cve['score']) # calculates teh severity label for ech CVE 
+@app.route('/')
+def index():
+    hosts = discover_hosts('192.168.56.0/24')
+    for host in hosts:
+        host['services'] = scan_services(host['ip'])
+        for service in host['services']:
+            try:
+                service['cves'] = lookup_cves(service['services'], service['version'])
+            except Exception:
+                service['cves'] = []
+            for cve in service['cves']:
+                cve['risk'] = calculate_risk(cve['score'])
     counts = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'unknown': 0}
     for host in hosts:
         for service in host.get('services', []):
@@ -21,9 +25,7 @@ def index(): #This is the function that runs when someone visits the homepage. I
                 risk = cve['risk'].lower()
                 if risk in counts:
                     counts[risk] += 1
-    return render_template('dashboard.html', hosts=hosts, counts=counts)   
+    return render_template('dashboard.html', hosts=hosts, counts=counts)
 
 if __name__ == '__main__':
-    app.run(debug=True)   # flask auto reloads when chnages are made       
-                               
-
+    app.run(debug=True)
