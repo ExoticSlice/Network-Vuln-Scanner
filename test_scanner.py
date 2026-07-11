@@ -14,4 +14,3 @@ def test_low():
 
 def test_unknown():
     assert calculate_risk(None) == 'Unknown'
-    
