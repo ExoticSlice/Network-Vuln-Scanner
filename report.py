@@ -15,7 +15,7 @@ def generate_report(hosts, filename='report.pdf'): # create main func called gen
     total_hosts = len(hosts) # counts total number of hosts that were scanned and stores it.  if 3 scanned 3 hosts 3 returns.
     elements.append(Paragraph(f"Total Hosts scanned:{total_hosts}", styles['Normal'])) # adds line to pdf showign how many hosts were scanned. the "f" inserts tota; hosts number in to the text.
     elements.append(Spacer(1, 20)) # adds another blank space after exceutive summary section before the next section starts.
-    elements.append(Paragraph("findings", styles['Heading1'])) #  where vulnerability details will be listed by host.
+    elements.append(Paragraph("Fndings", styles['Heading1'])) #  where vulnerability details will be listed by host.
     for host in hosts: # loops through each host that was scanned and for each host we'll add its ip address, services and CVE's report.
         elements.append(Paragraph(f"Host: {host['ip']}", styles['Heading2'])) # adds hosts IP address subheading for each host section in report.
         for service in host.get('services', []): # loops through all services found on the host. get's services list from this host and if not any then use empty list.
