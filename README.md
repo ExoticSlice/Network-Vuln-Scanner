@@ -103,7 +103,8 @@ Network-Vuln-Scanner/
 
 ## Screenshots
 
-_Dashboard and PDF report screenshots coming soon._
+![Dashboard](screenshots/Dashboard.png)
+![Findings Table](screenshots/Findings.png)
 
 ---
 
