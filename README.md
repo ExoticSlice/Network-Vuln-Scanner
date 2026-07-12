@@ -102,7 +102,6 @@ Network-Vuln-Scanner/
 ---
 
 ## Screenshots
-
 ![Dashboard](screenshots/dashboard.png)
 ![Findings Table](screenshots/findings.png)
 
